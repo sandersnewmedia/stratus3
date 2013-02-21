@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="{{ LANGUAGE_CODE|default:'en-us' }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/reset.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/bootstrap.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/stratus.css' %}" />
+    </head>
+
+    <body>
+        <div class="navbar navbar-static-top navbar-inverse">
+            <div class="navbar-inner">
+                <div class="container">
+                    <span class="brand">Stratus</span>
+                    {% block nav %}
+                    <ul class="nav">
+                        {% for nav in site.nav %}
+                        {% if nav.sub %}
+                        <li class="dropdown">
+                            <a href="{{ nav.main.url|default:'#' }}" class="dropdown-toggle" data-toggle="dropdown">{{ nav.main.name|title }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                {% for item in nav.sub %}
+                                <li><a href="{{ item.url }}">{{ item.name|title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li><a href="{{ nav.main.url|default:'#' }}">{{ nav.main.name|title }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            {% block full_content %}
+            <div class="row">
+                <div class="span10">
+                    {% block main_content %}
+                        <div class="row">
+                            <div class="span8">
+                            {% block header %}{% endblock %}
+                            </div>
+                        </div>
+
+                        {% block content %}{% endblock %}
+                    {% endblock %}
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+        <script type="text/javascript" src="{% static 'stratus/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'stratus/js/bootstrap-dropdown.js' %}"></script>
+    </body>
+</html>

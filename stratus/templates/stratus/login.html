@@ -1,0 +1,18 @@
+{% extends "stratus/base_site.html" %}
+{% load i18n %}
+{% load floppyforms %}
+
+{% block main_content %}
+    <h1>Login to Stratus</h1>
+    <div class="row">
+        <div class="span8">
+            <form action="." method="post">
+                {% csrf_token %}
+                {% formrow form.username form.password using "floppyforms/rows/bootstrap.html" %}
+                <input type="hidden" name="next" value="{{ next }}" />
+                {% trans 'Log in' as submit_label %}
+                {% include "floppyforms/rows/bootstrap_submit.html" with label=submit_label %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
