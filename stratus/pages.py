@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 
 from stratus import conf
+from stratus.admin import StratusModelAdmin
 from stratus.utils import nameify
 from stratus.views import StratusPageView
 
@@ -16,6 +17,7 @@ class StratusPage(object):
     template_name = None
     include_in_nav = True
     login_required = True
+    cacheable = False
 
     def __init__(self, site, section=None, name=None):
         self.site = site
@@ -24,9 +26,12 @@ class StratusPage(object):
         self.view = self.get_view()
 
     def wrap_view(self, view):
-        view = never_cache(view)
+        if not self.cacheable:
+            view = never_cache(view)
+
         if self.login_required:
             view = login_required(login_url=conf.get('STRATUS_LOGIN_URL'))(view)
+
         return view
 
     def get_view(self):
@@ -42,11 +47,15 @@ class StratusPage(object):
     def get_urlpatterns(self):
         return patterns('', *self.get_urls())
 
-    def get_context_data(self):
-        return {'site': self.site}
+    def get_context_data(self, request):
+        return {
+            'request': request,
+            'site': self.site,
+            'page': self,
+        }
 
     def render(self, request, template_name=None, extra_context=None):
-        ctx = self.get_context_data()
+        ctx = self.get_context_data(request)
         ctx.update(extra_context or {})
         return render(request, template_name or self.template_name, ctx)
 
@@ -59,49 +68,14 @@ class StratusPage(object):
         return reverse(name, current_app=self.site.name)
 
 
-class StratusModelAdmin(admin.ModelAdmin):
-
-    def __init__(self, model, admin_site, page):
-        self.page = page
-        super(StratusModelAdmin, self).__init__(model, admin_site)
-
-    def changelist_view(self, request, extra_context=None):
-        opts = self.model._meta
-        app_label = opts.app_label
-
-        self.change_list_template = (
-            'stratus/{}/{}/change_list.html'.format(app_label, opts.object_name.lower()),
-            'stratus/{}/change_list.html'.format(app_label),
-            'stratus/change_list.html'
-        )
-
-        context = extra_context or {}
-        context.update(self.page.get_context_data())
-        return super(StratusModelAdmin, self).changelist_view(request, context)
-
-    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
-        opts = self.model._meta
-        app_label = opts.app_label
-
-        self.add_form_template = self.change_form_template = (
-            'stratus/{}/{}/change_form.html'.format(app_label, opts.object_name.lower()),
-            'stratus/{}/change_form.html'.format(app_label),
-            'stratus/change_form.html',
-        )
-
-        extra_context = self.page.get_context_data()
-        context.update(extra_context)
-        return super(StratusModelAdmin, self).render_change_form(request, context, add, change, form_url, obj)
-
-
 class StratusModelAdminPage(StratusPage):
     model = None
-    model_admin_class = StratusModelAdmin
+    admin_class = StratusModelAdmin
 
     def __init__(self, *args, **kwargs):
         super(StratusModelAdminPage, self).__init__(*args, **kwargs)
         admin_site = admin.AdminSite(name=self.site.name, app_name=self.site.app_name)
-        self.model_admin = self.model_admin_class(self.model, admin_site, page=self)
+        self.model_admin = self.admin_class(self.model, admin_site, page=self)
 
     def get_urls(self):
         app = self.model._meta.app_label

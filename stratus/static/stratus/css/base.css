@@ -1,0 +1,32 @@
+body {
+    background: #ecf1ef;
+}
+
+body > .container {
+    background-color: #fff;
+    padding:20px 20px 5px 20px;
+    margin-bottom: 20px;
+}
+
+.container > .messages {
+    margin-top: 20px;
+}
+
+.navbar .brand {
+    color: #fff;
+    padding: 8px 20px 12px 20px;
+}
+
+.page-header {
+    position: relative;
+}
+
+.page-header .object-tools {
+    position: absolute;
+    right: 0;
+    top: 8px;
+}
+
+.submit-line {
+    margin-bottom: 20px;
+}

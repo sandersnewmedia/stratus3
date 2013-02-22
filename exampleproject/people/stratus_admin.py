@@ -16,6 +16,8 @@ class TeamInline(admin.TabularInline):
 class PersonModelAdmin(stratus.StratusModelAdmin):
     save_on_top = True
     readonly_fields = ['name']
+    list_filter = ['hobbies']
+    search_fields = ['name']
     inlines = [TeamInline]
 
 

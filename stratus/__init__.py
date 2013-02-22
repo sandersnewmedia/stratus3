@@ -1,3 +1,4 @@
+from stratus.admin import StratusModelAdmin
 from stratus.pages import StratusPage, StratusModelAdminPage
 from stratus.sections import StratusSection, StratusAppSection
 from stratus.sites import site

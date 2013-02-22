@@ -13,7 +13,7 @@ class StratusSite(object):
         self._registry = {}
 
     def register(self, cls, namespace=None):
-        instance = cls(self, namespace)
+        instance = cls(self, name=namespace)
 
         if instance.name in self._registry:
             raise AlreadyRegistered("'{}' has already been "
@@ -24,7 +24,7 @@ class StratusSite(object):
         return instance
 
     def unregister(self, cls, namespace=None):
-        instance = cls(self, namespace)
+        instance = cls(self, name=namespace)
 
         if instance.name not in self._registry:
             raise NotRegistered("'{}' has not been "
@@ -35,7 +35,7 @@ class StratusSite(object):
     @property
     def urls(self):
         urlpatterns = patterns('',
-            url(r'^$', RedirectView.as_view(url=conf.get('STRATUS_BASE_URL'))),
+            url(r'^$', RedirectView.as_view(url=conf.get('STRATUS_BASE_URL')), name='index'),
         )
 
         for obj in self._registry.itervalues():

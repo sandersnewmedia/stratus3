@@ -1,58 +1,95 @@
 <!DOCTYPE html>
-{% load static %}
-<html lang="{{ LANGUAGE_CODE|default:'en-us' }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+{% load i18n static %}
+{% load url from future %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
     <head>
         <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/reset.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/bootstrap.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/stratus.css' %}" />
-    </head>
 
-    <body>
+        {% block style %}
+        <link rel="stylesheet" type="text/css" href="{#% static "admin/css/base.css" %#}" />
+        <link rel="stylesheet" type="text/css" href="{% static "stratus/css/bootstrap.css" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "stratus/css/base.css" %}" />
+        {% endblock %}
+
+        {% block extrastyle %}{% endblock %}
+
+        <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
+
+        {% block extrahead %}{% endblock %}
+        {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+    </head>
+    <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
+
+        {% if not is_popup %}
+        <!-- Header -->
         <div class="navbar navbar-static-top navbar-inverse">
             <div class="navbar-inner">
                 <div class="container">
-                    <span class="brand">Stratus</span>
-                    {% block nav %}
-                    <ul class="nav">
-                        {% for nav in site.nav %}
-                        {% if nav.sub %}
-                        <li class="dropdown">
-                            <a href="{{ nav.main.url|default:'#' }}" class="dropdown-toggle" data-toggle="dropdown">{{ nav.main.name|title }} <b class="caret"></b></a>
+                    {% block branding %}{% endblock %}
+                    {% block nav-global %}{% endblock %}
+                    {% block nav-user %}
+                    {% if user.is_active and user.is_staff %}
+                    <ul class="nav pull-right">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                {% for item in nav.sub %}
-                                <li><a href="{{ item.url }}">{{ item.name|title }}</a></li>
-                                {% endfor %}
+                                {% url 'django-admindocs-docroot' as docsroot %}
+                                {% if docsroot %}
+                                <li><a href="{{ docsroot }}">{% trans 'Documentation' %}</a></li>
+                                {% endif %}
+                                <li><a href="#fix">Change password</a></li>
+                                <li><a href="{% url 'stratus:logout' %}">Logout</a></li>
+                                <li><a href="/" target="_blank">View Live Site</a></li>
                             </ul>
                         </li>
-                        {% else %}
-                        <li><a href="{{ nav.main.url|default:'#' }}">{{ nav.main.name|title }}</a></li>
-                        {% endif %}
-                        {% endfor %}
                     </ul>
+                    {% endif %}
                     {% endblock %}
                 </div>
             </div>
         </div>
+        {% endif %}
 
+        <!-- Container -->
         <div class="container">
-            {% block full_content %}
-            <div class="row">
-                <div class="span10">
-                    {% block main_content %}
-                        <div class="row">
-                            <div class="span8">
-                            {% block header %}{% endblock %}
-                            </div>
-                        </div>
+            <!-- END Header -->
+            {% block breadcrumbs %}
+            <ul class="breadcrumb">
+                <li><a href="{% url 'stratus:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+                <li class="active">{% if title %} &rsaquo; {{ title }}{% endif %}</li>
+            </ul>
+            {% endblock %}
 
-                        {% block content %}{% endblock %}
+            {% block messages %}
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message|safe }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endblock %}
+
+            <!-- Content -->
+            <div class="row">
+                <div class="{% block coltype %}span12{% endblock %}">
+                    <div class="page-header">
+                        {% block content_title %}{% if title %}<h3>{{ title }}</h3>{% endif %}{% endblock %}
+                        {% block content_header_extras %}{% endblock %}
+                    </div>
+                    {% block content %}
+                    {% block object-tools %}{% endblock %}
+                    {{ content }}
                     {% endblock %}
                 </div>
+                {% block sidebar %}{% endblock %}
             </div>
-            {% endblock %}
+            <!-- END Content -->
+
+            {% block footer %}<div id="footer"></div>{% endblock %}
         </div>
-        <script type="text/javascript" src="{% static 'stratus/js/jquery.js' %}"></script>
-        <script type="text/javascript" src="{% static 'stratus/js/bootstrap-dropdown.js' %}"></script>
+        <!-- END Container -->
     </body>
 </html>

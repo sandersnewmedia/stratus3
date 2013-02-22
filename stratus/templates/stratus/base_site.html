@@ -1,10 +1,10 @@
 {% extends "stratus/base.html" %}
 {% load i18n %}
 
-{% block title %}{% if title %}{{ title }} | {% endif %}{% trans 'Stratus site admin' %}{% endblock %}
+{% block title %}{{ title }} | {% trans 'Django site admin' %}{% endblock %}
 
 {% block branding %}
-    <h1 id="site-name">{% trans 'Stratus administration' %}</h1>
+<span class="brand">{% trans 'Django administration' %}</span>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
