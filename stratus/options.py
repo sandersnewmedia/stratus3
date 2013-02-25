@@ -118,11 +118,11 @@ class StratusModelAdmin(ModelAdmin):
             # redirect to the change-list page for this object. Otherwise,
             # redirect to the admin index.
             if self.has_change_permission(request, None):
-                post_url = reverse('admin:%s_%s_changelist' %
+                post_url = reverse('status:%s_%s_changelist' %
                                    (opts.app_label, opts.module_name),
                                    current_app=self.admin_site.name)
             else:
-                post_url = reverse('admin:index',
+                post_url = reverse('stratus:index',
                                    current_app=self.admin_site.name)
             return HttpResponseRedirect(post_url)
 
