@@ -1,0 +1,17 @@
+{% extends "stratus/index.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'stratus:index' %}">{% trans 'Home' %}</a>
+&rsaquo;
+{% for section in section_list %}
+{% blocktrans with section.section.name as name %}{{ name }}{% endblocktrans %}
+{% endfor %}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block sidebar %}{% endblock %}

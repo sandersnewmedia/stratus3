@@ -1,13 +1,12 @@
 {% extends "stratus/base_site.html" %}
 {% load i18n l10n %}
 {% load url from future %}
-{% load admin_urls %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
 <a href="{% url 'stratus:index' %}">{% trans 'Home' %}</a>
-&rsaquo; <a href="#fix}">{{ app_label|capfirst|escape }}</a>
-&rsaquo; <a href="{{ page.url }}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; <a href="{% url 'stratus:app_list' app_label=app_label %}">{{ app_label|capfirst|escape }}</a>
+&rsaquo; <a href="{{ page.change_url }}}">{{ opts.verbose_name_plural|capfirst }}</a>
 &rsaquo; {% trans 'Delete multiple objects' %}
 </div>
 {% endblock %}

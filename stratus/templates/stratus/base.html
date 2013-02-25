@@ -1,95 +1,77 @@
-<!DOCTYPE html>
-{% load i18n static %}
-{% load url from future %}
-<html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
-    <head>
-        <title>{% block title %}{% endblock %}</title>
+{% load stratus_static %}{% load url from future %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "stratus/css/base.css" %}{% endblock %}" />
+{% block extrastyle %}{% endblock %}
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "stratus/css/ie.css" %}{% endblock %}" /><![endif]-->
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "stratus/css/rtl.css" %}{% endblock %}" />{% endif %}
+<script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "stratus/" %}{% endfilter %}";</script>
+{% block extrahead %}{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+</head>
+{% load i18n %}
 
-        {% block style %}
-        <link rel="stylesheet" type="text/css" href="{#% static "admin/css/base.css" %#}" />
-        <link rel="stylesheet" type="text/css" href="{% static "stratus/css/bootstrap.css" %}" />
-        <link rel="stylesheet" type="text/css" href="{% static "stratus/css/base.css" %}" />
-        {% endblock %}
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
 
-        {% block extrastyle %}{% endblock %}
+<!-- Container -->
+<div id="container">
 
-        <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
-
-        {% block extrahead %}{% endblock %}
-        {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
-    </head>
-    <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
-
-        {% if not is_popup %}
-        <!-- Header -->
-        <div class="navbar navbar-static-top navbar-inverse">
-            <div class="navbar-inner">
-                <div class="container">
-                    {% block branding %}{% endblock %}
-                    {% block nav-global %}{% endblock %}
-                    {% block nav-user %}
-                    {% if user.is_active and user.is_staff %}
-                    <ul class="nav pull-right">
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %} <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                {% url 'django-admindocs-docroot' as docsroot %}
-                                {% if docsroot %}
-                                <li><a href="{{ docsroot }}">{% trans 'Documentation' %}</a></li>
-                                {% endif %}
-                                <li><a href="#fix">Change password</a></li>
-                                <li><a href="{% url 'stratus:logout' %}">Logout</a></li>
-                                <li><a href="/" target="_blank">View Live Site</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    {% endif %}
-                    {% endblock %}
-                </div>
-            </div>
+    {% if not is_popup %}
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
+        </div>
+        {% if user.is_active and user.is_staff %}
+        <div id="user-tools">
+            {% trans 'Welcome,' %}
+            <strong>{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong>.
+            {% block userlinks %}
+                {% url 'django-admindocs-docroot' as docsroot %}
+                {% if docsroot %}
+                    <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+                {% endif %}
+                <a href="{% url 'stratus:password_change' %}">{% trans 'Change password' %}</a> /
+                <a href="{% url 'stratus:logout' %}">{% trans 'Log out' %}</a>
+            {% endblock %}
         </div>
         {% endif %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'stratus:index' %}">{% trans 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
 
-        <!-- Container -->
-        <div class="container">
-            <!-- END Header -->
-            {% block breadcrumbs %}
-            <ul class="breadcrumb">
-                <li><a href="{% url 'stratus:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
-                <li class="active">{% if title %} &rsaquo; {{ title }}{% endif %}</li>
-            </ul>
-            {% endblock %}
+    {% block messages %}
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
 
-            {% block messages %}
-            {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message|safe }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% endblock %}
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
 
-            <!-- Content -->
-            <div class="row">
-                <div class="{% block coltype %}span12{% endblock %}">
-                    <div class="page-header">
-                        {% block content_title %}{% if title %}<h3>{{ title }}</h3>{% endif %}{% endblock %}
-                        {% block content_header_extras %}{% endblock %}
-                    </div>
-                    {% block content %}
-                    {% block object-tools %}{% endblock %}
-                    {{ content }}
-                    {% endblock %}
-                </div>
-                {% block sidebar %}{% endblock %}
-            </div>
-            <!-- END Content -->
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
 
-            {% block footer %}<div id="footer"></div>{% endblock %}
-        </div>
-        <!-- END Container -->
-    </body>
+</body>
 </html>

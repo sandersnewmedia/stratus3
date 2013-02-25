@@ -1,73 +1,41 @@
-from django.conf.urls import include, patterns, url
-from django.db import models
+from django.core.urlresolvers import reverse
+from django.utils.datastructures import SortedDict
 
-from stratus.exceptions import AlreadyRegistered, NotRegistered
-from stratus.pages import StratusModelAdminPage
-from stratus.utils import nameify
+from stratus import StratusModelAdmin
 
 
 class StratusSection(object):
-    namespace = None
-    include_in_nav = True
 
-    def __init__(self, site, name=None):
-        self.site = site
-        self.name = name or self.namespace or nameify(self, 'Section')
-        self._registry = {}
+    def __init__(self, name, namespace, admin_site):
+        self.name = name
+        self.namespace = namespace
+        self.admin_site = admin_site
+        self._registry = SortedDict()
 
-    def register(self, cls, namespace=None):
-        instance = cls(self.site, section=self, name=namespace)
+    def register(self, namespace, admin, ordering=None):
+        if ordering is None:
+            self._registry[namespace] = admin
+        else:
+            self._registry.insert(ordering, namespace, admin)
 
-        if instance.name in self._registry:
-            raise AlreadyRegistered("'{}' has already been "
-                "registered.".format(instance.name))
+    def unregister(self, namespace):
+        del self._registry[namespace]
 
-        self._registry[instance.name] = instance
+    def register_model(self, model, model_admin=StratusModelAdmin, ordering=None):
+        namespace = '{}/{}'.format(model._meta.app_label, model._meta.module_name)
+        self.admin_site.register(model, model_admin)
+        admin = self.admin_site._registry[model]
+        self.register(namespace, admin, ordering)
 
-        return instance
+    def unregister_model(self, model):
+        namespace = '{}/{}'.format(model._meta.app_label, model._meta.module_name)
+        self.admin_site.unregister(model)
+        self.unregister(namespace)
 
-    def unregister(self, cls, namespace=None):
-        instance = cls(self.site, section=self, name=namespace)
-
-        if instance.name not in self._registry:
-            raise NotRegistered("'{}' has not been "
-                "registered.".format(instance.name))
-
-        del self._registry[instance.name]
-
-    def get_urls(self):
-        urlpatterns = patterns('')
-
-        for page in self._registry.itervalues():
-            urlpatterns += page.get_urlpatterns()
-
-        return urlpatterns
-
-    def get_urlpatterns(self):
-        return patterns('', url(r'^{}/'.format(self.name), include(self.get_urls())))
-
-    @property
-    def nav(self):
-        return [page for page in self._registry.itervalues() if page.include_in_nav]
-
-    @property
     def url(self):
-        try:
-            return self.nav[0].url
-        except IndexError:
-            return None
+        return reverse('stratus:app_list', kwargs={'app_label': self.namespace}, current_app=self.name)
 
-
-class StratusAppSection(StratusSection):
-    app_label = None
-
-    def __init__(self, *args, **kwargs):
-        if self.app_label is None:
-            self.app_label = self.__class__.__module__.split('.')[-2]
-
-        super(StratusAppSection, self).__init__(*args, **kwargs)
-
-        for model in models.get_models(models.get_app(self.app_label)):
-            attrs = {'model': model}
-            ModelPage = type('{}Page'.format(model.__name__), (StratusModelAdminPage,), attrs)
-            self.register(ModelPage)
+    def pages(self, request):
+        # TODO: Add permission checks to only include pages the user
+        # is allowed to see.
+        return self._registry.values()

@@ -1,30 +1,17 @@
-from django.contrib import admin
-
 import stratus
 
 from people.models import Person, Team
 
 
-class PeopleSection(stratus.StratusSection):
-    pass
-
-
-class TeamInline(admin.TabularInline):
+class TeamInline(stratus.StratusTabularInline):
     model = Team
 
 
-class PersonModelAdmin(stratus.StratusModelAdmin):
-    save_on_top = True
-    readonly_fields = ['name']
-    list_filter = ['hobbies']
-    search_fields = ['name']
+class PersonAdmin(stratus.StratusModelAdmin):
+    date_hierarchy = 'birth_date'
+    list_filter = ['birth_date']
     inlines = [TeamInline]
 
 
-class PersonPage(stratus.StratusModelAdminPage):
-    model = Person
-    admin_class = PersonModelAdmin
-
-
-people = stratus.site.register(PeopleSection)
-people.register(PersonPage)
+people_section = stratus.site.register_section('People')
+people_section.register_model(Person, PersonAdmin)
