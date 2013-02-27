@@ -1,3 +1,5 @@
+import os
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 ROOT_URLCONF = 'urls'
@@ -39,3 +41,5 @@ INSTALLED_APPS = (
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
+
+TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)

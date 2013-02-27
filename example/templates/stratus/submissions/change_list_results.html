@@ -1,0 +1,92 @@
+{% load i18n admin_static %}
+{% if result_hidden_fields %}
+<div class="hiddenfields">{# DIV for HTML validation #}
+{% for item in result_hidden_fields %}{{ item }}{% endfor %}
+</div>
+{% endif %}
+
+{% if cl.result_list %}
+<div class="results">
+    <ul>
+    {% for object in cl.result_list %}
+        <li class="{{ object.status }}">
+            <img src="http://www.dumpaday.com/wp-content/uploads/2012/12/grumpy-cat-funny-cats.jpg" />
+            <div class="details">
+                <div class="date">{{ object.created_date }}</div>
+                <div class="title">{{ object.title }}</div>
+                <button class="action-trigger" data-action="mark_declined" data-item="{{ object.pk }}">Decline</button>
+                <button class="action-trigger" data-action="mark_selected" data-item="{{ object.pk }}">Like</button>
+                <button class="action-trigger" data-action="mark_revoked" data-item="{{ object.pk }}">Revoked</button>
+            </div>
+            <input type="checkbox" class="action-select" value="{{ object.pk }}" name="_selected_action" />
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<script type="text/javascript">
+(function($) {
+
+    $(document).ready(function() {
+        $('.action-trigger').click(function() {
+            var form = $('#changelist-form');
+            form.find('select[name="action"]').val($(this).attr('data-action'));
+            form.find('input[name="_selected_action"][value="' + $(this).attr('data-item') + '"]').get(0).checked = true;
+            form.submit();
+        });
+    });
+
+})(django.jQuery);
+</script>
+
+<style type="text/css">
+    .results { margin: 10px 0; }
+
+    .results ul { margin: 0; }
+
+    .results li {
+        border: 1px solid grey;
+        display: inline-block;
+        height: 195px;
+        list-style: none;
+        margin: 0 0 4px 0;
+        overflow: hidden;
+        position: relative;
+        width: 195px;
+    }
+
+    .results li.selected { border: 1px solid green; }
+    .results li.declined { border: 1px solid orange; }
+    .results li.revoked { border: 1px solid red; }
+
+    .results li:hover .details { display: block; }
+
+    .results img {
+        display: block;
+        height: 100%;
+        position: absolute;
+        width: 100%;
+    }
+
+    .results .action-select {
+        left: 4px;
+        position: absolute;
+        top: 4px;
+    }
+
+    .results .details {
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+        height: 100%;
+        padding: 10px;
+        position: absolute;
+        width: 100%;
+    }
+
+    .results .details .title {
+        font-size: 14px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+</style>
