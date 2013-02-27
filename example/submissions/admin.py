@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from stratus.filters import DateRangeListFilter, DropdownListFilter, SearchListFilter
+from stratus.filters import DateRangeListFilter, SearchListFilter
 
 from submissions.models import Submission, SubmissionEstimate
 
@@ -10,7 +10,6 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_filter = [
         ('created_date', DateRangeListFilter),
         ('title', SearchListFilter),
-        ('status', DropdownListFilter),
     ]
     search_fields = ['title']
 
