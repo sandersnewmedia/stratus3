@@ -12,7 +12,7 @@ def result_list(context, cl):
         'stratus/%s/%s/change_list_results.html' % (app_label, module_name),
         'stratus/%s/change_list_results.html' % app_label,
         'stratus/change_list_results.html',
-        'admin/change_list_results.html',
+        getattr(cl.model_admin, 'change_list_results_template', 'admin/change_list_results.html'),
     ]
 
     new_context = {

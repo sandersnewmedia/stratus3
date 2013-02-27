@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block content_title %}
+{{ block.super }}
+
+{% block orderable_help_text %}
+{% blocktrans with cl.opts.verbose_name_plural as verbose_name_plural and cl.model_admin.orderable_field as orderable_field %}
+    <p class="help">
+        <strong>TIP:</strong> You can drag and drop the <span id="verbose-name-plural">{{ verbose_name_plural }}</span> 
+        in this list to change their {{ orderable_field }} on the site &mdash; just be sure to click the Save button in the lower right 
+        of the list when you're done!
+    </p>
+{% endblocktrans %}
+{% endblock %}
+{% endblock %}
+
+{% block result_list %}
+{{ block.super }}
+{% if cl.model_admin.orderable_field %}
+<input id="js-orderable-changelist-field" type="hidden" name="_orderable_field" value="{{ cl.model_admin.orderable_field }}" />
+{% endif %}
+{% endblock %}
