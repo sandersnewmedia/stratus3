@@ -23,6 +23,8 @@ MIDDLEWARE_CLASSES = (
 )
 
 INSTALLED_APPS = (
+    'stratus',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -31,7 +33,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'debug_toolbar',
     'people',
-    'stratus',
+    'submissions',
 )
 
 DEBUG_TOOLBAR_CONFIG = {
