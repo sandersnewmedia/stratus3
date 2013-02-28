@@ -5,8 +5,12 @@ TEMPLATE_DEBUG = DEBUG
 ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
 SITE_ID = 1
-STATIC_URL = '/static/'
 INTERNAL_IPS = ['127.0.0.1']
+
+STATIC_URL = '/static/'
+
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = '/tmp/stratus/'
 
 DATABASES = {
     'default': {
