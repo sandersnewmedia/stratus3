@@ -1,24 +1,22 @@
 from django.contrib import admin
 from django.db import models
 
-from stratus.mixins import OrderableAdminMixin, OrderableTabularInlineMixin
+from stratus.admin import OrderableModelAdmin, OrderableTabularInline
 from stratus.widgets import DisplayableImageWidget
 
 from people.models import Image, Person
 
 
-class ImageInline(OrderableTabularInlineMixin, admin.StackedInline):
+class ImageInline(OrderableTabularInline):
     model = Image
     extra = 0
     orderable_field = 'order'
     formfield_overrides = {
-        models.ImageField: {
-            'widget': DisplayableImageWidget,
-        },
+        models.ImageField: {'widget': DisplayableImageWidget},
     }
 
 
-class PersonAdmin(OrderableAdminMixin, admin.ModelAdmin):
+class PersonAdmin(OrderableModelAdmin):
     list_display = ['name']
     orderable_field = 'order'
     inlines = [ImageInline]

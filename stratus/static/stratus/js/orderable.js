@@ -52,7 +52,7 @@
         var field = inline.data('orderable-field');
 
         inline.find('th:contains(' + toTitleCase(field) + ')').hide();
-        inline.find('input[name$="-' + field + '"]').hide();
+        inline.find('input[name$="-' + field + '"]').parent().hide();
 
         inline.find('tbody').sortable({
             update: function (event, ui) {
