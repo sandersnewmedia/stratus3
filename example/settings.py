@@ -5,6 +5,7 @@ TEMPLATE_DEBUG = DEBUG
 ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
 SITE_ID = 1
+SECRET_KEY = 'not-so-secret'
 INTERNAL_IPS = ['127.0.0.1']
 
 STATIC_URL = '/static/'
@@ -26,6 +27,17 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
 )
 
 INSTALLED_APPS = (

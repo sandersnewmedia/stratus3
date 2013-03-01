@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
+import stratus
 from stratus.filters import DateRangeListFilter, SearchListFilter
 
 from submissions.models import Submission
@@ -29,4 +30,4 @@ class SubmissionAdmin(admin.ModelAdmin):
     mark_revoked.short_description = _('Revoke selected submissions')
 
 
-admin.site.register(Submission, SubmissionAdmin)
+stratus.site.register(Submission, SubmissionAdmin)

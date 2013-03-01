@@ -1,0 +1,48 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static admin_list %}
+{% load url from future %}
+{% load admin_urls %}
+
+{% block extrastyle %}
+    {{ block.super }}
+
+    {% if cl.formset or action_form %}
+        {% url 'admin:jsi18n' as jsi18nurl %}
+        <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+    {% endif %}
+
+    {{ media.css }}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}change-list{% endblock %}
+
+{% block content %}
+    <div class="page-header clearfix">
+        <h3 class="pull-left">All {{ cl.opts.verbose_name_plural|capfirst }}</h3>
+
+        {% block object-tools %}
+            {% if has_add_permission %}
+            <div class="object-tools btn-group pull-right">
+                {% block object-tools-items %}
+                    <a class="btn btn-primary" href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}">
+                        {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+                    </a>
+                {% endblock %}
+            </div>
+            {% endif %}
+        {% endblock %}
+    </div>
+
+    <div id="changelist">
+        {% block result_list %}
+            {% result_list cl %}
+        {% endblock %}
+    </div>
+
+    {% block pagination %}{% pagination cl %}{% endblock %}
+{% endblock %}

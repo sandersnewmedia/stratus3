@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load i18n admin_static stratus_navigation %}
+{% load url from future %}
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet/less" type="text/css" href="{% static 'stratus/css/stratus.less' %}" />
+        {% block extrastyle %}{% endblock %}
+
+        <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static 'admin/' %}{% endfilter %}";</script>
+        <script type="text/javascript" src="{% static 'stratus/js/less.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'stratus/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'stratus/js/bootstrap.min.js' %}"></script>
+        {% block extrahead %}{% endblock %}
+
+        {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+    </head>
+    <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
+        {% if not is_popup %}
+        <div class="navbar navbar-static-top navbar-inverse">
+            <div class="navbar-inner">
+                <div class="container">
+                    <span class="brand">{% block branding %}{% endblock %}</span>
+
+                    {% render_navigation navigation %}
+
+                    <ul class="nav pull-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'admin:logout' %}">{% trans 'Logout' %}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div id="content" class="container">
+            {% block subnav %}{% render_sub_navigation navigation %}{% endblock %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>
