@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.html import escape
 
 
-class TemplateWidgetMixn(object):
+class TemplateWidgetMixin(object):
     template_name = None
 
     def render(self, name, value, attrs=None):
@@ -11,7 +11,7 @@ class TemplateWidgetMixn(object):
         return render_to_string(self.template_name, context)
 
 
-class DisplayableImageWidget(TemplateWidgetMixn, forms.ClearableFileInput):
+class DisplayableImageWidget(TemplateWidgetMixin, forms.ClearableFileInput):
     template_name = 'stratus/widgets/displayable_image_widget.html'
 
     def __init__(self, max_width=None, max_height=None, *args, **kwargs):

@@ -15,7 +15,7 @@
         <thead>
             <tr>
                 {% for header in result_headers %}
-                    {% if not forloop.first %} {# Disables action checkboxes for now #}
+                    {% if forloop.first and action_form and actions_on_bottom and cl.full_result_count or not forloop.first %} {# Disables action checkboxes #}
                         <th scope="col" {{ header.class_attrib }}>{{ header.text|capfirst }}</th>
                     {% endif %}
                 {% endfor %}
@@ -26,7 +26,7 @@
             {% for result in results %}
             <tr>
                 {% for item in result %}
-                    {% if not forloop.first %} {# Disables action checkboxes for now #}
+                    {% if forloop.first and action_form and actions_on_bottom and cl.full_result_count or not forloop.first %} {# Disables action checkboxes #}
                         {{ item }}
                     {% endif %}
                 {% endfor %}
