@@ -1,0 +1,18 @@
+{% load i18n admin_static %}
+
+<form id="changelist-search" class="form-search" action="" method="get">
+    <div>
+        <input class="search-query" type="text" name="{{ search_var }}" value="{{ cl.query }}" />
+        <button type="submit" class="btn">{% trans 'Go' %}</button>
+    </div>
+
+    {% if show_result_count %}
+        <small class="muted">{% blocktrans count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktrans %} (<a href="?{% if cl.is_popup %}pop=1{% endif %}">{% blocktrans with full_result_count=cl.full_result_count %}{{ full_result_count }} total{% endblocktrans %}</a>)</small>
+    {% endif %}
+
+    {% if cl.params.items %}
+        {% for pair in cl.params.items %}
+            {% ifnotequal pair.0 search_var %}<input type="hidden" name="{{ pair.0 }}" value="{{ pair.1 }}"/>{% endifnotequal %}
+        {% endfor %}
+    {% endif %}
+</form>

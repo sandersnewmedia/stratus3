@@ -8,6 +8,7 @@ class Avatar(models.Model):
 
 class Person(models.Model):
     name = models.CharField(_('name'), max_length=255, help_text='help me')
+    birthdate = models.DateTimeField(_('birth date'))
     avatars = models.ManyToManyField(Avatar, verbose_name=_('avatars'), blank=True)
     order = models.IntegerField(_('order'), default=1)
 

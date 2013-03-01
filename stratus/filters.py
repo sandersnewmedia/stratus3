@@ -69,11 +69,3 @@ class DateRangeListFilter(FormListFilter):
             js=['stratus/js/calendarbox.js'],
         )
         return super(DateRangeListFilter, self).get_media() + media
-
-
-class SearchListFilter(FormListFilter):
-
-    def get_fields(self):
-        return [
-            ('icontains', forms.CharField(label=_('Search'))),
-        ]

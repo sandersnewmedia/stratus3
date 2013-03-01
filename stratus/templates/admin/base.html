@@ -43,6 +43,17 @@
         {% endif %}
 
         <div id="content" class="container">
+            {% block messages %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endblock messages %}
+
             {% block subnav %}{% render_sub_navigation navigation %}{% endblock %}
 
             {% block content %}{% endblock %}
