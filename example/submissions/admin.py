@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
 import stratus
-from stratus.filters import DateRangeListFilter, SearchListFilter
+from stratus.filters import DateRangeListFilter
 
 from submissions.models import Submission
 
@@ -11,7 +11,6 @@ class SubmissionAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_date'
     list_filter = [
         ('created_date', DateRangeListFilter),
-        ('title', SearchListFilter),
         'status',
     ]
     search_fields = ['title']
