@@ -24,7 +24,7 @@
                 <div class="container">
                     <span class="brand">{% block branding %}{% endblock %}</span>
 
-                    {% render_navigation navigation %}
+                    {% render_navigation %}
 
                     <ul class="nav pull-right">
                         <li class="dropdown">
@@ -54,7 +54,7 @@
                 {% endif %}
             {% endblock messages %}
 
-            {% block subnav %}{% render_sub_navigation navigation %}{% endblock %}
+            {% block subnav %}{% render_sub_navigation %}{% endblock %}
 
             {% block content %}{% endblock %}
         </div>
