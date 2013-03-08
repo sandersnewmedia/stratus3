@@ -22,7 +22,7 @@
         <div class="navbar navbar-static-top navbar-inverse">
             <div class="navbar-inner">
                 <div class="container">
-                    <span class="brand">{% block branding %}{% endblock %}</span>
+                    <a href="{%  url 'admin:index' %}" class="brand">{% block branding %}{% endblock %}</a>
 
                     {% render_navigation %}
 
