@@ -35,7 +35,11 @@
                 <div class="controls">
                     {{ form.username }}
                 {% if not form.this_is_the_login_form.errors %}
-                    <span class="help-inline">{{ form.username.errors }}</span>
+                    <span class="help-inline">
+                        {% for error in form.username.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </span>
                 {% endif %}
                 </div>
             </div>
@@ -44,7 +48,8 @@
                 <div class="controls">
                     {{ form.password }}
                     {% if not form.this_is_the_login_form.errors %}
-                        <span class="help-inline">{{ form.password.errors }}</span>
+                        <span class="help-inline">
+                            {% for error in form.password.errors %}{{ error }}{% endfor %}</span>
                     {% endif %}
                 </div>
                 <input type="hidden" name="this_is_the_login_form" value="1" />
