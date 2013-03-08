@@ -1,6 +1,0 @@
-Django==1.5
-PIL==1.1.7
-distribute==0.6.31
-django-debug-toolbar==0.9.4
--e git+git@github.com:sandersnewmedia/stratus3.git@6c3e00ba53cbe1339bf993ffbbb3dfbd7cd1625f#egg=stratus-dev
-wsgiref==0.1.2
