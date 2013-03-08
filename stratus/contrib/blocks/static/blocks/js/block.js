@@ -50,12 +50,19 @@
         select.data('preChangeValue', fieldName);
     };
 
+    var hideWhenReadOnly = function() {
+        var fieldset = $(this).parents('fieldset');
+        fieldset.find(fieldSelector).hide();
+        fieldset.find('.field-content_' + $(this).text().toLowerCase().replace(/ /g, '_')).show();
+    };
+
     $(document).ready(function() {
         $('.field-content_type select')
             .live('focus', trackPreChange)
             .live('change', toggleFields)
             .each(toggleFields);
-        //$(contentSelector).hide();
+
+        $('.field-content_type p').each(hideWhenReadOnly);
     });
 
 })(django.jQuery);
