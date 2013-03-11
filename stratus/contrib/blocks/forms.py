@@ -24,4 +24,4 @@ class BlockForm(forms.ModelForm):
     def save(self, commit):
         content_type = self.cleaned_data['content_type']
         self.instance.content = self.cleaned_data['content_%s' % content_type]
-        super(BlockForm, self).save(commit)
+        return super(BlockForm, self).save(commit)
