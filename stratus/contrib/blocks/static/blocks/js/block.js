@@ -7,15 +7,12 @@
         'image',
     ];
 
-    var inputSelector = $.map(fields, function(name) {
-        return '[name*="content_' + name + '"]';
-    }).join(',');
-
-    var fieldSelector = $.map(fields, function(name) {
-        return '.field-content_' + name;
-    }).join(',');
-
-    var contentSelector = '.field-content';
+    var applyToFields = function(fieldset, callback) {
+        $.each(fields, function(i, name) {
+            var el = fieldset.find('[name*="content_' + name + '"]');
+            callback.apply(el, [i, name]);
+        });
+    };
 
     var transferContent = function() {
         var field = $(this);
@@ -37,32 +34,62 @@
 
         if (changed && hasValue) {
             if (confirm(message)) {
-                fieldset.find(inputSelector).val('');
+                applyToFields(fieldset, function(i, name) {
+                    $(this).val('');
+                });
             } else {
                 select.val(previousFieldName);
                 return false;
             }
         }
 
-        fieldset.find(fieldSelector).hide();
-        fieldset.find('.field-content_' + fieldName).show();
+        applyToFields(fieldset, function(i, name, selector) {
+            if (name == fieldName) {
+                $(this).parents('.row1, .row2').show();
+            } else {
+                $(this).parents('.row1, .row2').hide();
+            }
+        });
 
         select.data('preChangeValue', fieldName);
     };
 
+    var reColorRows = function() {
+        var row = $(this).parents('.row1, .row2');
+        var fieldset = row.parents('fieldset');
+
+        applyToFields(fieldset, function(i, name, selector) {
+            if (row.hasClass('row1')) {
+                $(this).parents('.row1, .row2').removeClass('row1').addClass('row2');
+            } else {
+                $(this).parents('.row1, .row2').removeClass('row2').addClass('row1');
+            }
+        });
+    };
+
     var hideWhenReadOnly = function() {
         var fieldset = $(this).parents('fieldset');
-        fieldset.find(fieldSelector).hide();
-        fieldset.find('.field-content_' + $(this).text().toLowerCase().replace(/ /g, '_')).show();
+
+        applyToFields(fieldset, function(i, name, selector) {
+            $(this).parents('.row1, .row2').hide();
+        });
+
+        
+
+        fieldset.find('[name*="content_' + $(this).text().toLowerCase().replace(/ /g, '_') + '"]').parents('.row1, .row2').show();
     };
 
     $(document).ready(function() {
-        $('.field-content_type select')
+        $('[name*="content_type"]')
             .live('focus', trackPreChange)
             .live('change', toggleFields)
-            .each(toggleFields);
+            .each(toggleFields)
+            .each(reColorRows);
 
-        $('.field-content_type p').each(hideWhenReadOnly);
+        var readOnly = $('.controls span i').filter(function() {
+            return $(this).parents('.control-group').find('.control-label').text() == 'content type:';
+        });
+        readOnly.each(hideWhenReadOnly);
     });
 
-})(django.jQuery);
+})(yawdadmin.jQuery);

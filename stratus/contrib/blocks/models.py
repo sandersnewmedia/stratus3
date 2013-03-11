@@ -26,7 +26,6 @@ class Block(models.Model):
         ('single_line_text', _('Single Line Text')),
         ('multiple_line_text', _('Multiple Line Text')),
         ('html', _('Html')),
-        ('image', _('Image')),
     ]
 
     blockpage = models.ForeignKey(BlockPage, verbose_name=_('page'), related_name='blocks')
