@@ -20,3 +20,8 @@ class BlockForm(forms.ModelForm):
         super(BlockForm, self).__init__(*args, **kwargs)
         content_type = self.initial.get('content_type')
         self.initial['content_%s' % content_type] = self.instance.content
+
+    def save(self, commit):
+        content_type = self.cleaned_data['content_type']
+        self.instance.content = self.cleaned_data['content_%s' % content_type]
+        super(BlockForm, self).save(commit)
