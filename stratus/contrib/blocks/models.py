@@ -25,6 +25,7 @@ class Block(models.Model):
     CONTENT_TYPES = [
         ('single_line_text', _('Single Line Text')),
         ('multiple_line_text', _('Multiple Line Text')),
+        ('list_text', _('List Text')),
         ('html', _('Html')),
     ]
 
