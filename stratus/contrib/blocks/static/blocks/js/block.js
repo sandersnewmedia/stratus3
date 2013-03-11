@@ -31,9 +31,10 @@
         var changed = (previousFieldName != fieldName);
         var hasValue = $.trim(fieldset.find('[name*="content_' + previousFieldName + '"]').val()) != '';
         var message = 'Are you sure you want to change content types? You will lose whats current entered.';
+        var confirmFunc = confirm || function() { return true; };
 
         if (changed && hasValue) {
-            if (confirm(message)) {
+            if (confirmFunc(message)) {
                 applyToFields(fieldset, function(i, name) {
                     $(this).val('');
                 });
