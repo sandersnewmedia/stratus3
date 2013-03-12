@@ -7,6 +7,7 @@ from stratus.contrib.blocks.models import Block
 class BlockForm(forms.ModelForm):
     content_single_line_text = forms.CharField(label=_('Text'), widget=forms.TextInput(attrs={'class': 'vLargeTextField'}), required=False)
     content_multiple_line_text = forms.CharField(label=_('Text'), widget=forms.Textarea(attrs={'class': 'vLargeTextField'}), required=False)
+    content_list_text = forms.CharField(label=_('Text'), widget=forms.Textarea(attrs={'class': 'vLargeTextField'}), required=False)
     content_html = forms.CharField(label=_('HTML'), widget=forms.Textarea(attrs={'class': 'vLargeTextField'}), required=False)
 
     class Media:
