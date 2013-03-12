@@ -5,7 +5,7 @@ from django.contrib.admin.util import unquote
 from django.http import HttpResponse, Http404
 from django.utils import simplejson
 
-from stratus.contrib.galleries.models import ImageGallery, ThumbnailSize
+from stratus.galleries.models import ImageGallery, ThumbnailSize
 
 
 class ThumbnailSizeInline(admin.StackedInline):

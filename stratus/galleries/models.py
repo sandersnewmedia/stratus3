@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext_lazy as _
 
-from stratus.contrib.galleries.strategies import strategies
+from stratus.galleries.strategies import strategies
 
 
 class ImageGallery(models.Model):

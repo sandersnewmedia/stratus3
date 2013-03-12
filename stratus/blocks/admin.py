@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from stratus.contrib.blocks.forms import BlockForm
-from stratus.contrib.blocks.models import BlockPage, Block
+from stratus.blocks.forms import BlockForm
+from stratus.blocks.models import BlockPage, Block
 from stratus.utils import unchangeable_fields
 
 
@@ -14,7 +14,7 @@ class BlockMixin(object):
             user=request.user,
             app_label=self.opts.app_label,
             fields=['title', 'slug', 'content_type'],
-            )
+        )
         return fields
 
 
@@ -25,7 +25,6 @@ class BlockInline(BlockMixin, admin.StackedInline):
 
 class BlockAdmin(BlockMixin, admin.ModelAdmin):
     pass
-
 
 
 class BlockPageAdmin(admin.ModelAdmin):

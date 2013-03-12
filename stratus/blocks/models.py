@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
@@ -20,6 +22,12 @@ class BlockPage(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def blocksdict(self):
+        if not hasattr(self, '_cached_blocksdict'):
+            blocksdict = dict((re.sub(r'^%s-' % self.slug, '', b.slug), b) for b in self.blocks.all())
+            self._cached_blocksdict = blocksdict
+        return self._cached_blocksdict
 
 
 class Block(models.Model):

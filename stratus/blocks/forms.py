@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from stratus.contrib.blocks.models import Block
+from stratus.blocks.models import Block
 
 
 class BlockForm(forms.ModelForm):

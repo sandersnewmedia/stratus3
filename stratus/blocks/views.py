@@ -1,6 +1,6 @@
 from django.views.generic.detail import DetailView
 
-from stratus.contrib.blocks.models import BlockPage
+from stratus.blocks.models import BlockPage
 
 
 class BlockPageView(DetailView):
