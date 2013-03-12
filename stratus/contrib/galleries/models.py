@@ -57,7 +57,10 @@ class Image(models.Model):
         return self.image.name
 
     def thumbnailsdict(self):
-        return dict((thumbnail.size.slug, thumbnail) for thumbnail in self.thumbnails.all())
+        if not hasattr(self, '_cached_thumbnailsdict'):
+            thumbnails = dict((thumbnail.size.slug, thumbnail) for thumbnail in self.thumbnails.all())
+            self._cached_thumbnailsdict = thumbnails
+        return self._cached_thumbnailsdict
 
 
 class ThumbnailSize(models.Model):
