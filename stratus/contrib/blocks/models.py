@@ -10,12 +10,13 @@ class BlockPage(models.Model):
     url = models.CharField(_('URL'), max_length=100, unique=True)
     slug = models.SlugField(_('slug'), unique=True)
     template_name = models.CharField(_('template name'), max_length=70, default='blocks/blockpage.html')
+
     class Meta(object):
         db_table = 'stratus_blockpage'
         permissions = [
             ('change_url', 'Can change block url'),
             ('change_template_name', 'Can change block template name'),
-            ]
+        ]
 
     def __unicode__(self):
         return self.title
@@ -27,7 +28,7 @@ class Block(models.Model):
         ('multiple_line_text', _('Multiple Line Text')),
         ('list_text', _('List Text')),
         ('html', _('Html')),
-        ]
+    ]
 
     blockpage = models.ForeignKey(BlockPage, verbose_name=_('page'), related_name='blocks', null=True, blank=True)
     slug = models.SlugField(_('slug'), unique=True)
@@ -41,7 +42,7 @@ class Block(models.Model):
             ('change_title', 'Can change block title'),
             ('change_slug', 'Can change block slug'),
             ('change_content_type', 'Can change block content type'),
-            ]
+        ]
 
     def __unicode__(self):
         return '%s' % self.slug
