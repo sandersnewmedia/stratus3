@@ -5,19 +5,27 @@ from stratus.contrib.blocks.models import BlockPage, Block
 from stratus.utils import unchangeable_fields
 
 
-class BlockInline(admin.StackedInline):
-    model = Block
+class BlockMixin(object):
     form = BlockForm
-    extra = 0
 
     def get_readonly_fields(self, request, obj=None):
-        fields = list(super(BlockInline, self).get_readonly_fields(request, obj))
+        fields = list(super(BlockMixin, self).get_readonly_fields(request, obj))
         fields += unchangeable_fields(
             user=request.user,
             app_label=self.opts.app_label,
             fields=['title', 'slug', 'content_type'],
-        )
+            )
         return fields
+
+
+class BlockInline(BlockMixin, admin.StackedInline):
+    model = Block
+    extra = 0
+
+
+class BlockAdmin(BlockMixin, admin.ModelAdmin):
+    pass
+
 
 
 class BlockPageAdmin(admin.ModelAdmin):
@@ -34,3 +42,4 @@ class BlockPageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BlockPage, BlockPageAdmin)
+admin.site.register(Block, BlockAdmin)
