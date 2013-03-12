@@ -46,14 +46,6 @@ class Block(models.Model):
     def __unicode__(self):
         return '%s' % self.slug
 
-    """
-    def save(self, *args, **kwargs):
-        if self.blockpage_id:
-            self.title = '%s %s' % (self.blockpage.title, self.title)
-            self.slug = '%s-%s' % (self.blockpage.slug, self.slug)
-        super(Block, self).save(*args, **kwargs)
-    """
-
     def render(self):
         if not self.content_type:
             return ''
