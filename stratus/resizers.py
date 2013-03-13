@@ -11,7 +11,7 @@ def normalize_format(format):
     return format.upper()
 
 
-class StrategyRegistry(object):
+class ResizerRegistry(object):
     default = None
 
     def __init__(self):
@@ -19,20 +19,20 @@ class StrategyRegistry(object):
 
     @property
     def choices(self):
-        strategies = sorted(self._registry.iteritems())
-        return [(key, name) for key, (name, strategy) in strategies]
+        resizers = sorted(self._registry.iteritems())
+        return [(key, name) for key, (name, resizer) in resizers]
 
-    def register(self, key, name, strategy, default=False):
-        self._registry[key] = (name, strategy)
+    def register(self, key, name, resizer, default=False):
+        self._registry[key] = (name, resizer)
         if default:
             self.default = key
 
-    def get_strategy(self, key):
-        name, strategy = self._registry[key]
-        return strategy
+    def get_resizer(self, key):
+        name, resizer = self._registry[key]
+        return resizer
 
 
-class BaseStrategy(object):
+class BaseResizer(object):
 
     def __init__(self, width, height, format, quality):
         self.width = width
@@ -53,11 +53,11 @@ class BaseStrategy(object):
         return ContentFile(buf.getvalue())
 
 
-class CropStrategy(BaseStrategy):
+class CropResizer(BaseResizer):
 
     def _resize(self, source):
         return ImageOps.fit(source, (self.width, self.height), Image.ANTIALIAS)
 
 
-strategies = StrategyRegistry()
-strategies.register('crop', 'Crop', CropStrategy, default=True)
+resizers = ResizerRegistry()
+resizers.register('crop', 'Crop', CropResizer, default=True)

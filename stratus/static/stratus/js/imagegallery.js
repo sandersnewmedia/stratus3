@@ -45,8 +45,9 @@
         },
 
         deleteModel: function() {
-            this.model.destroy();
-            this.trigger('deleteModel');
+            this.model.destroy({success: _.bind(function() {;
+                this.trigger('deleteModel');
+            }, this)});
         }
     });
 
@@ -56,15 +57,18 @@
         },
 
         initialize: function() {
-            _.bindAll(this, 'openSelector', 'uploadSuccess', 'updateAll');
+            _.bindAll(this, 'openSelector', 'uploadSuccess', 'updateAll', 'updateMaxReached');
 
             this.images = new ImageList({baseUrl: this.options.baseUrl});
 
+            this.addRowEl = this.$('.add-row');
             this.imageListEl = this.$('.images-list');
             this.fileInputEl = this.$el.find('.image-file-input');
 
             this.listenTo(this.images, 'add', this.addOne);
             this.listenTo(this.images, 'reset', this.addAll);
+            this.listenTo(this.images, 'add', this.updateMaxReached);
+            this.listenTo(this.images, 'reset', this.updateMaxReached);
 
             this.fileInputEl.fileupload({
                 url: this.images.url,
@@ -90,6 +94,7 @@
         addOne: function(image) {
             var view = new ImageView({model: image});
             this.listenTo(view, 'deleteModel', this.updateAll)
+            this.listenTo(view, 'deleteModel', this.updateMaxReached)
             this.imageListEl.append(view.render().el);
         },
 
@@ -122,6 +127,16 @@
 
             if (model) {
                 model.set({order: order});
+            }
+        },
+
+        updateMaxReached: function() {
+            if (this.images.length >= this.options.max) {
+                this.addRowEl.hide();
+                this.fileInputEl.fileupload('disable');
+            } else {
+                this.addRowEl.show();
+                this.fileInputEl.fileupload('enable');
             }
         }
     });

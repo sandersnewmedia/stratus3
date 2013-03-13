@@ -5,7 +5,39 @@ from django.contrib.admin.util import unquote
 from django.http import HttpResponse, Http404
 from django.utils import simplejson
 
-from stratus.galleries.models import ImageGallery, ThumbnailSize
+from stratus.forms import BlockForm
+from stratus.models import BlockGroup, Block, ImageGallery, ThumbnailSize
+from stratus.utils import unchangeable_fields
+
+
+class BlockInline(admin.StackedInline):
+    model = Block
+    form = BlockForm
+    extra = 0
+
+    def get_readonly_fields(self, request, obj=None):
+        fields = list(super(BlockInline, self).get_readonly_fields(request, obj))
+        fields += unchangeable_fields(
+            user=request.user,
+            app_label=self.opts.app_label,
+            fields=['key', 'content_type'],
+        )
+        return fields
+
+
+class BlockGroupAdmin(admin.ModelAdmin):
+    inlines = [BlockInline]
+    list_display = ['title', 'key']
+    ordering = ['title']
+
+    def get_readonly_fields(self, request, obj=None):
+        fields = list(super(BlockGroupAdmin, self).get_readonly_fields(request, obj))
+        fields += unchangeable_fields(
+            user=request.user,
+            app_label=self.opts.app_label,
+            fields=['key'],
+        )
+        return fields
 
 
 class ThumbnailSizeInline(admin.StackedInline):
@@ -13,13 +45,9 @@ class ThumbnailSizeInline(admin.StackedInline):
     extra = 0
     modal = True
 
-    def queryset(self, request):
-        qs = super(ThumbnailSizeInline, self).queryset(request)
-        qs = qs.exclude(auto_created=True)
-        return qs
-
 
 class ImageGalleryAdmin(admin.ModelAdmin):
+    add_form_template = 'admin/stratus/imagegallery/add_form.html'
     inlines = [ThumbnailSizeInline]
 
     class Media(object):
@@ -29,7 +57,7 @@ class ImageGalleryAdmin(admin.ModelAdmin):
             'stratus/js/jquery.fileupload.js',
             'stratus/js/underscore.js',
             'stratus/js/backbone.js',
-            'galleries/js/imagegallery.js',
+            'stratus/js/imagegallery.js',
         ]
 
     def get_urls(self):
@@ -71,7 +99,7 @@ class ImageGalleryAdmin(admin.ModelAdmin):
             raise Http404
         else:
             image.delete()
-        return HttpResponse('')
+        return HttpResponse('{}', content_type='application/json')
 
     def image_to_dict(self, image):
         try:
@@ -108,4 +136,5 @@ class ImageGalleryAdmin(admin.ModelAdmin):
         return self.handle_image_list(request, obj)
 
 
+admin.site.register(BlockGroup, BlockGroupAdmin)
 admin.site.register(ImageGallery, ImageGalleryAdmin)

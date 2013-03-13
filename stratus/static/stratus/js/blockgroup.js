@@ -3,8 +3,8 @@
     var fields = [
         'single_line_text',
         'multiple_line_text',
+        'list_text',
         'html',
-        'image',
     ];
 
     var applyToFields = function(fieldset, callback) {
@@ -75,8 +75,6 @@
             $(this).parents('.row1, .row2').hide();
         });
 
-        
-
         fieldset.find('[name*="content_' + $(this).text().toLowerCase().replace(/ /g, '_') + '"]').parents('.row1, .row2').show();
     };
 
@@ -87,10 +85,10 @@
             .each(toggleFields)
             .each(reColorRows);
 
-        var readOnly = $('.controls span i').filter(function() {
+        // Hide based on read only fields.
+        $('.controls span i').filter(function() {
             return $(this).parents('.control-group').find('.control-label').text() == 'content type:';
-        });
-        readOnly.each(hideWhenReadOnly);
+        }).each(hideWhenReadOnly);
     });
 
 })(yawdadmin.jQuery);
