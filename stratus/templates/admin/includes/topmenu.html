@@ -1,0 +1,53 @@
+{% load i18n yawdadmin_filters yawdadmin_tags %}
+{% get_admin_site_meta %}
+<div class="navbar navbar-top navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<a class="brand" href="{{homeurl}}">Stratus</a>
+					<nav id="logged-user-menu">
+						<ul class="nav pull-right">{% if langs %}
+							<li class="divider-vertical hidden-phone hidden-tablet"></li>
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle lang-switcher" href="#">{% for lang in langs %}{% if lang.name == LANGUAGE_CODE %}{% get_language_info for lang.name as info %}{% if lang.image %}
+									<img src="{{lang.image.url}}" alt="{{info.name}}" title="{{info.name}}" />{% else %}
+									{{info.name}}{% endif %}{% endif %}{% endfor %}{% if langs and langs|length > 1 %}
+									<b class="caret"></b>{% endif %}
+								</a>{% if langs and langs|length > 1 %}
+								<ul class="dropdown-menu pull-left">{% for lang in langs %}{% if lang.name != LANGUAGE_CODE %}
+									<li>{% get_language_info for lang.name as info %}
+										<a href="{% if not lang.default %}/{{info.code}}{% endif %}{{clean_url}}">{% if lang.image %}
+											<img src="{{lang.image.url}}" alt="{{info.name}}" title="{{info.name}}" /> {% endif %}
+											{{info.name}}
+										</a>
+									</li>{% endif %}{% endfor %}
+								</ul>{% endif %}
+							</li>{% endif %}
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<i class="icon-user icon-white"></i>&#xa0;{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">{% block userlinks %}{% if analytics %}
+									<li>
+										<a id="ga-configuration-link" href="{% url 'admin:analytics' %}">{% trans 'Configure Google Analytics' %}</a>
+									</li>
+									<li class="divider"></li>{% endif %}{% url 'django-admindocs-docroot' as docsroot %}{% if docsroot %}
+									<li>
+										<a id="documentation-link" href="{{ docsroot }}">{% trans 'Documentation' %}</a>
+									</li>{% endif %}
+									<li>
+										<a id="my-account-link" href="{% url 'admin:my-account' %}">{% trans 'My Account' %}</a>
+									</li>{% if user.has_usable_password %}
+									<li>
+										<a id="change-password-link" href="{% url 'admin:password_change' %}">{% trans 'Change Password' %}</a>
+									</li>{% endif %}<li class="divider"></li>{% url 'admin:logout' as logout_url %}
+									<li>
+										<a id="logout-link" href="{% if logout_url %}{{ logout_url }}{% else %}{{ homeurl }}logout/{% endif %}">{% trans 'Logout' %}</a>
+									</li>{% endblock %}
+								</ul>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>

@@ -1,0 +1,115 @@
+{% extends "admin/base_site.html" %}{% load admin_list i18n admin_static yawdadmin_tags yawdadmin_filters %}
+
+{% block extrastyle %}{{ block.super }}{% if cl.has_filters %}
+		<link rel="stylesheet" type="text/css" href="{% static 'css/select2/select2.css' %}" />{% endif %}{% if not actions_on_top and not actions_on_bottom %}
+		<style>
+			#changelist table thead th:first-child { width: inherit; }
+		</style>{% endif %}{% endblock %}
+
+{% block extrahead %}{{ block.super }}{% if cl.formset or action_form %}{% url 'admin:jsi18n' as jsi18nurl %}
+		<script src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>{% endif %}{% if cl.has_filters %}
+		<script src="{% static 'css/select2/select2.min.js' %}"></script>
+		<script>
+			(function($) {
+				$(document).ready(function($) {
+					$('#changelist-filters .select2').select2().change(function(e) {
+						document.location = $(this).children('option:selected').data('href');
+					});
+					$('#changelist-filters .dropdown-menu').click(function (e) {
+					    e.stopPropagation();
+					});
+				});
+			})(yawdadmin.jQuery);
+		</script>{% endif %}{% if is_popup %}
+		<script>
+			var opener = parent;
+		</script>{% endif %}{% if action_form %}{% if actions_on_top or actions_on_bottom %}
+		<script>
+			(function($) {
+				$(document).ready(function($) {
+					$("tr input.action-select").actions();
+				});
+			})(yawdadmin.jQuery);
+		</script>{% endif %}{% endif %}
+		{% clean_media media %}{% endblock %}
+
+{% block bodyclass %}change-list{% endblock %}
+
+{% block content_title %}
+
+{% if title %}
+	{% if cl.model_admin.title_icon %}
+	<i class="{{cl.model_admin.title_icon}} title-icon"></i>
+	{% endif %}
+	{{ cl.opts.verbose_name_plural|capfirst }}
+{% endif %}
+
+{% endblock %}
+
+{% block breadcrumbs %}{% if not is_popup %}
+			<ul class="breadcrumbs pull-left">
+				<li><a href="{% url 'admin:index' %}"><i class="icon-home"></i></a></li>
+				<li><a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{% with app_title=app_label|app_title|escape %}{{ app_title.title }}{% endwith %}</a></li>
+				<li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
+			</ul>
+      {% block object-tools %}
+      {% block object-tools-items %}
+        {% if has_add_permission %}
+        <ul class="nav nav-pills pull-right">
+          <li>
+        <a href="add/{% if is_popup %}?_popup=1{% endif %}">
+          <i class="icon-plus-sign"></i> {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a></li></ul>
+        {% endif %}
+      {% endblock %}
+      {% endblock %}
+{% endif %}{% endblock %}
+
+
+
+
+
+{% block content %}
+<div class="container-fluid hpadded">
+			<div class="row-fluid show-grid">
+				<div class="span12">
+					<div id="content-main">{% if cl.formset.errors %}
+						<p class="alert alert-error close">
+							{% blocktrans count cl.formset.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+						</p>
+						{{ cl.formset.non_form_errors }}{% endif %}
+						<div class="box{% if cl.has_filters %} filter{% endif %}">
+							<form id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}{% if cl.formset %}
+								<div>{{ cl.formset.management_form }}</div>{% endif %}{% block result_list %}
+								
+                <div class="box-content">
+                  <div class="table-header">
+                    <div class="actions padded">
+                      {% if action_form and actions_on_top and cl.full_result_count %}
+                        {% admin_actions %}
+                      {% endif %}
+
+                    {% if cl.has_filters %}
+
+                    <div class="btn-group">
+                      <button class="btn btn-default  dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i> {% trans 'Filters' %} <span class="caret"></span></button>
+                      <ul class="dropdown-menu">{% for spec in cl.filter_specs %}
+                          {% admin_list_filter cl spec %}{% if not forloop.last %}
+                          <li class="divider"></li>{% endif %}{% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+								{% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+								{% result_list cl %}{% if action_form and actions_on_bottom and cl.full_result_count %}
+								{% admin_actions %}{% endif %}{% endblock %}{% block pagination %}
+								{% pagination cl %}{% endblock %}
+              </div>
+							</form>
+							{% block search %}{% search_form cl %}{% endblock %}
+						</div>
+					</div>
+				</div>
+			</div>
+</div>
+      {% endblock %}
