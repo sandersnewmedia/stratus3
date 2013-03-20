@@ -64,7 +64,6 @@ class Block(models.Model):
 class ImageGallery(models.Model):
     title = models.CharField(_('title'), max_length=100)
     key = models.CharField(_('key'), max_length=50, unique=True, validators=[validate_key])
-    max_images = models.PositiveIntegerField(_('max images'), null=True, blank=True)
 
     class Meta(object):
         db_table = 'stratus_imagegallery'
