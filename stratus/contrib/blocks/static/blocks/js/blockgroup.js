@@ -3,8 +3,8 @@
     var fields = [
         'single_line_text',
         'multiple_line_text',
+        'list_text',
         'html',
-        'image',
     ];
 
     var inputSelector = $.map(fields, function(name) {

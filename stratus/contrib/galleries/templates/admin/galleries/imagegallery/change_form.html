@@ -43,8 +43,7 @@
 
     var inline = new ImageInline({
         el: $('#images-group'),
-        baseUrl: "{% url opts|admin_urlname:'image_list' original.pk|admin_urlquote %}",
-        max: {{ original.max_images }}
+        baseUrl: "{% url opts|admin_urlname:'image_list' original.pk|admin_urlquote %}"
     });
 
     $(function(){
