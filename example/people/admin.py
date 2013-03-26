@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from stratus.admin import OrderableAdmin
+
 from people.models import Image, Person, Team
 
 
@@ -8,5 +10,12 @@ class ImageInline(admin.StackedInline):
     extra = 0
 
 
-admin.site.register(Person, list_display=['name'], search_fields=['name'], inlines=[ImageInline])
+class PersonAdmin(OrderableAdmin):
+    ordering_field = 'order'
+    list_display = ['name', 'order']
+    search_fields = ['name']
+    inlines = [ImageInline]
+
+
+admin.site.register(Person, PersonAdmin)
 admin.site.register(Team)
