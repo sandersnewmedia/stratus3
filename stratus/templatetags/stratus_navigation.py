@@ -36,7 +36,7 @@ def get_navigation(context):
 
     if 'request' not in context:
         if settings.TEMPLATE_DEBUG:
-            raise template.TemplateSyntaxtError('Request must in the context '
+            raise template.TemplateSyntaxError('Request must in the context '
                 'to use navigation tags.')
         return apps, active
 
