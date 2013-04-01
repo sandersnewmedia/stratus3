@@ -47,10 +47,10 @@ class Block(models.Model):
         if not self.content_type:
             content = ''
         else:
-            content = render_to_string('stratus/contrib/blocks/block_%s.html' % self.content_type, {'block': self})
+            content = render_to_string('blocks/block_%s.html' % self.content_type, {'block': self})
 
         if request and '_preview' in request.GET and request.user.is_staff:
-            return render_to_string('stratus/contrib/blocks/block_wrapper.html', {
+            return render_to_string('blocks/block_wrapper.html', {
                 'block': self,
                 'content': content,
             })
