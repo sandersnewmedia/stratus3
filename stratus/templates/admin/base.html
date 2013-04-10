@@ -6,11 +6,10 @@
         <title>{% block title %}{% endblock %}</title>
 
         <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/bootstrap.min.css' %}" />
-        <link rel="stylesheet/less" type="text/css" href="{% static 'stratus/css/stratus.less' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'stratus/css/stratus.css' %}" />
         {% block extrastyle %}{% endblock %}
 
         <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static 'admin/' %}{% endfilter %}";</script>
-        <script type="text/javascript" src="{% static 'stratus/js/less.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'stratus/js/jquery.js' %}"></script>
         <script type="text/javascript" src="{% static 'stratus/js/bootstrap.min.js' %}"></script>
         {% block extrahead %}{% endblock %}
