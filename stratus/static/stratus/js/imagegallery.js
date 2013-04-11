@@ -115,6 +115,7 @@
         uploadSuccess: function(data) {
             this.images.add(data);
             this.progressPanel.hide();
+            this.progressPanel.find('.bar').width(0);
             return false;
         },
 
