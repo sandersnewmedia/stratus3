@@ -63,13 +63,14 @@
         },
 
         initialize: function() {
-            _.bindAll(this, 'openSelector', 'uploadSuccess', 'updateAll');
+            _.bindAll(this, 'openSelector', 'uploadSuccess', 'uploadProgress', 'updateAll');
 
             this.images = new ImageList({baseUrl: this.options.baseUrl});
 
             this.addRowEl = this.$('.add-row');
             this.imageListEl = this.$('.images-list');
             this.fileInputEl = this.$el.find('.image-file-input');
+            this.progressPanel = this.$el.find('.progress-panel');
 
             this.listenTo(this.images, 'add', this.addOne);
             this.listenTo(this.images, 'reset', this.addAll);
@@ -78,7 +79,8 @@
                 url: this.images.url,
                 dataType: 'json',
                 autoUpload: true,
-                success: this.uploadSuccess
+                success: this.uploadSuccess,
+                progressall: this.uploadProgress
             });
 
             this.imageListEl.sortable({
@@ -112,6 +114,13 @@
 
         uploadSuccess: function(data) {
             this.images.add(data);
+            this.progressPanel.hide();
+            return false;
+        },
+
+        uploadProgress: function(data) {
+            this.progressPanel.show();
+            this.progressPanel.find('.bar').width(((data.loaded / data.total) * 100) + '%');
             return false;
         },
 

@@ -10,6 +10,9 @@
             <input class="image-file-input" type="file" name="image" />
             <i class="icon-plus admin-inline-icon"></i>&nbsp;<a href="#">{% trans "Add another Image" %}</a>
         </div>
+        <div class="progress-panel">
+            <div class="progress progress-striped active"><div class="bar"></div></div>
+        </div>
     </div>
 </div>
 
@@ -37,7 +40,23 @@
         top: -7px;
     }
     #images-group  i { color: #fff; }
+    #images-group .inline-wrapper { position: relative; }
     #images-group .images-list { padding: 0 0 20px 20px; }
+    #images-group .progress-panel {
+        background: rgba(255, 255, 255, 0.5);
+        display: none;
+        height: 106%;
+        position: absolute;
+        top: -6px;
+        width: 100%;
+    }
+    #images-group .progress {
+        background: #ccc;
+        margin: 0 auto;
+        position: relative;
+        top: 30%;
+        width: 50%;
+    }
 </style>
 
 <script type="text/javascript">
