@@ -5,5 +5,3 @@ recursive-include stratus/templates *
 recursive-include stratus/static *
 recursive-include stratus/contrib/blocks/templates *
 recursive-include stratus/contrib/blocks/static *
-recursive-include stratus/contrib/galleries/templates *
-recursive-include stratus/contrib/galleries/static *
