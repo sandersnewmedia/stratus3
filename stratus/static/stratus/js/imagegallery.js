@@ -116,6 +116,9 @@
             this.images.add(data);
             this.progressPanel.hide();
             this.progressPanel.find('.bar').width(0);
+            // This fixes the issue with second uploads not working. I'm sure
+            // a better fix is needed in the future.
+            this.fileInputEl = this.$el.find('.image-file-input');
             return false;
         },
 
