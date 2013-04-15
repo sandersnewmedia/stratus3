@@ -69,3 +69,6 @@ body {
 .vLargeTextField {
   width: 610px;
 }
+tr {
+  background: #fff;
+}

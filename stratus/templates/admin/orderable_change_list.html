@@ -16,6 +16,7 @@
             $($('body.change-list')).each(function() {
                 $('div#changelist tbody', this).sortable({
                     items: 'tr',
+                    containment: 'tbody',
                     update: function() {
                         var rows = $(this).find('tr');
                         var pks = $.makeArray(rows.map(function() { return $(this).data('pk'); }));
@@ -31,7 +32,18 @@
                                 });
                             }
                         });
-                    }
+                    },
+
+                    helper: function(e, tr) {
+                        var originals = tr.children();
+                        var helper = tr.clone();
+
+                        helper.children().each(function(index) {
+                            $(this).width(originals.eq(index).width());
+                        });
+
+                        return helper;
+                      },
                 });
             });
         });
