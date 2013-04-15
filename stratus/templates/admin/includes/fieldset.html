@@ -14,7 +14,11 @@
                         </label>
                     </div>
                 {% else %}
+                    {% if field.is_readonly %}
+                    <label class="control-label">{{ field.field.label }}</label>
+                    {% else %}
                     <label class="control-label{% if field.field.field.required %} required{% endif %}" for="{{ field.field.field.widget.attrs.id|default:field.field.auto_id }}">{{ field.field.label }}</label>
+                    {% endif %}
 
                     <div class="controls">
                          {% if field.is_readonly %}
