@@ -69,6 +69,11 @@ body {
 .vLargeTextField {
   width: 610px;
 }
-tr {
-  background: #fff;
+.controls ul {
+  list-style: none;
+  margin: 0;
+}
+.controls ul input {
+  margin: 0 5px 0 0;
+  vertical-align: baseline;
 }
