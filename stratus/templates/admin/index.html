@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_static %}
+{% load i18n admin_static stratus_helpers %}
 
 {% block extrastyle %}{{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}"/>{% endblock %}
@@ -47,6 +47,9 @@
     {% else %}
         <p>{% trans "You don't have permission to edit anything." %}</p>
     {% endif %}
+        </div>
+        <div class="span4">
+            {% render_app_help_text app_list %}
         </div>
     </div>
 {% endblock %}
