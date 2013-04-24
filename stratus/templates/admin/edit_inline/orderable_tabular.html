@@ -1,0 +1,39 @@
+{% include "admin/edit_inline/tabular.html" %}
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var orderingField = '{{ inline_admin_formset.opts.ordering_field }}';
+        var table = $('#{{ inline_admin_formset.formset.prefix }}-group');
+        var headerName = orderingField[0].toUpperCase() + orderingField.slice(1, orderingField.length);
+        var header = $('thead th:contains(' + headerName + ')', table);
+
+        header.hide();
+
+        $('tbody tr', table).each(function(i, el) {
+            $(this).find('input[name$="-' + orderingField + '"]').parent('td').hide();
+        });
+
+        $('tbody', table).sortable({
+            items: 'tr',
+            containment: 'table',
+
+            update: function() {
+                $(this).find('tr').each(function(i, el) {
+                    $(this).find('input[name$="-' + orderingField + '"]').val(i + 1);
+                });
+            },
+
+            helper: function(e, tr) {
+                var originals = tr.children();
+                var helper = tr.clone();
+
+                helper.children().each(function(index) {
+                    $(this).width(originals.eq(index).width());
+                });
+
+                return helper;
+            },
+        });
+    });
+</script>

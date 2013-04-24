@@ -5,8 +5,7 @@ from django.http import HttpResponse
 from django.utils import simplejson
 
 
-class OrderableAdmin(admin.ModelAdmin):
-    change_list_template = 'admin/orderable_change_list.html'
+class OrderableMixin(object):
     ordering_field = None
 
     class Media(object):
@@ -15,7 +14,11 @@ class OrderableAdmin(admin.ModelAdmin):
     def __init__(self, *args, **kwargs):
         if self.ordering_field and not self.ordering:
             self.ordering = [self.ordering_field]
-        super(OrderableAdmin, self).__init__(*args, **kwargs)
+        super(OrderableMixin, self).__init__(*args, **kwargs)
+
+
+class OrderableAdmin(OrderableMixin, admin.ModelAdmin):
+    change_list_template = 'admin/orderable_change_list.html'
 
     def get_urls(self):
         from django.conf.urls import patterns, url
@@ -43,3 +46,7 @@ class OrderableAdmin(admin.ModelAdmin):
                 obj.save()
                 data[pk] = order
         return HttpResponse(simplejson.dumps(data), content_type='application/json')
+
+
+class OrderableTabularInline(OrderableMixin, admin.TabularInline):
+    template = 'admin/edit_inline/orderable_tabular.html'

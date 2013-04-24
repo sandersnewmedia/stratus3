@@ -10,7 +10,8 @@
             var orderingField = '{{ cl.model_admin.ordering_field }}';
             var orderingUrl = '{% url cl.opts|admin_urlname:"reorder" %}';
             var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
-            var header = $('thead th:contains(' + orderingField[0].toUpperCase() + ')');
+            var headerName = orderingField[0].toUpperCase() + orderingField.slice(1, orderingField.length);
+            var header = $('thead th:contains(' + headerName + ')');
             var orderColumnIndex = $('thead th').index(header);
 
             $($('body.change-list')).each(function() {
@@ -44,7 +45,7 @@
                         });
 
                         return helper;
-                      },
+                    },
                 });
             });
         });

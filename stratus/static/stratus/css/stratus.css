@@ -77,6 +77,15 @@ body {
   list-style: none;
   margin: 0;
 }
+.table td,
+.table th {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+.table p {
+  margin: 0;
+}
 #changelist-search {
   margin: 0;
 }
