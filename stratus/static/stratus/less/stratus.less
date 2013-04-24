@@ -104,12 +104,21 @@ body {
     width: 610px;
 }
 
-.controls ul {
-    list-style: none;
-    margin: 0;
+.controls {
+    ul {
+        list-style: none;
+        margin: 5px 0;
 
-    input {
-        margin: 0 5px 0 0;
-        vertical-align: baseline;
+        input {
+            margin: -4px 5px 0 0;
+        }
+    }
+
+    input + .help-block {
+        margin: 0;
+    }
+
+    p {
+        padding: 5px 0;
     }
 }

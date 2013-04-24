@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from django.utils import simplejson
 
 
-
 class OrderableAdmin(admin.ModelAdmin):
     change_list_template = 'admin/orderable_change_list.html'
     ordering_field = None
