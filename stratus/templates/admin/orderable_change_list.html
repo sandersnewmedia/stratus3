@@ -16,7 +16,8 @@
             $($('body.change-list')).each(function() {
                 $('div#changelist tbody', this).sortable({
                     items: 'tr',
-                    containment: 'tbody',
+                    containment: 'table',
+
                     update: function() {
                         var rows = $(this).find('tr');
                         var pks = $.makeArray(rows.map(function() { return $(this).data('pk'); }));

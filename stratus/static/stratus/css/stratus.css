@@ -58,6 +58,8 @@ body {
 }
 #changelist td,
 #changelist th {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
   vertical-align: middle;
 }
 #changelist input,
