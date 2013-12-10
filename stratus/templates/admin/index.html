@@ -12,7 +12,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="span8">
+        <div class="col-md-8">
     {% if app_list %}
         {% for app in app_list %}
                 <h4><a href="{{ app.app_url }}"
@@ -23,9 +23,9 @@
                 {% for model in app.models %}
                     <tr>
                         {% if model.admin_url %}
-                            <td scope="row" class="span6"><a href="{{ model.admin_url }}">{{ model.name }}</a></td>
+                            <td scope="row" class="col-md-6"><a href="{{ model.admin_url }}">{{ model.name }}</a></td>
                         {% else %}
-                            <td scope="row" class="span6">{{ model.name }}</td>
+                            <td scope="row" class="col-md-6">{{ model.name }}</td>
                         {% endif %}
 
                         {% if model.add_url %}
@@ -48,7 +48,7 @@
         <p>{% trans "You don't have permission to edit anything." %}</p>
     {% endif %}
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             {% render_app_help_text app_list %}
         </div>
     </div>

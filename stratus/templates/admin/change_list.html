@@ -48,7 +48,7 @@
 
     <div id="changelist" class="row">
         {% with has_sidebar=cl.search_fields|default:cl.date_hierarchy|default:cl.has_filters %}
-            <div class="{% if has_sidebar %}span9{% else %}span12{% endif %}">
+            <div class="{% if has_sidebar %}col-md-9{% else %}col-md-12{% endif %}">
                 <form id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
                     {% csrf_token %}
 
@@ -67,7 +67,7 @@
             </div>
 
             {% if has_sidebar %}
-                <div class="sidebar span3">
+                <div class="sidebar col-md-3">
                     {% block search %}
                         {% if cl.search_fields %}
                             <div class="module">

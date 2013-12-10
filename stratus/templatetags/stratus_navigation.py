@@ -97,7 +97,7 @@ def render_navigation(context):
     }
 
 
-@register.inclusion_tag('stratus/navigation.html', takes_context=True)
+@register.inclusion_tag('stratus/sub_navigation.html', takes_context=True)
 def render_sub_navigation(context):
     apps, active = get_navigation(context)
     try:
@@ -106,5 +106,5 @@ def render_sub_navigation(context):
         items = []
     return {
         'items': sorted(items, key=lambda o: o['name']),
-        'classes': 'nav-tabs',
+        'classes': 'nav-pills',
     }

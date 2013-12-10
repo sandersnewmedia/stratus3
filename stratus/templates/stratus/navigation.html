@@ -1,5 +1,5 @@
 {% if items %}
-<ul class="nav{% if classes %} {{ classes }}{% endif %}">
+<ul class="nav navbar-nav nav{% if classes %} {{ classes }}{% endif %}">
     {% for item in items %}
         <li{% if item.is_active %} class="active"{% endif %}>
             <a href="{{ item.url }}">{{ item.name }}</a>

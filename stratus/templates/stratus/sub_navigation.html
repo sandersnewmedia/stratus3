@@ -1,0 +1,13 @@
+{% if items %}
+<div class="row">
+	<div class="col-md-12">
+		<ul class="nav nav-tabs">
+			{% for item in items %}
+			<li{% if item.is_active %} class="active"{% endif %}>
+			<a href="{{ item.url }}">{{ item.name }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+</div>
+{% endif %}
